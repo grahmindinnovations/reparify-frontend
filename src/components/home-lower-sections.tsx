@@ -119,7 +119,7 @@ export default function HomeLowerSections() {
 
         <section className="bg-white p-4">
           <h4 className="text-center text-sm font-semibold text-zinc-700">
-            Customers can&apos;t stop raving about their "Sparify" experience
+            Customers can&apos;t stop raving about their &quot;Sparify&quot; experience
           </h4>
           <div className="mt-4 grid gap-4 lg:grid-cols-[1.1fr_1fr]">
             <div className="grid grid-cols-2 gap-2">

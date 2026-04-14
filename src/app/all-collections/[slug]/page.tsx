@@ -5,7 +5,9 @@ import {
   getCategoryProducts,
   getCollectionBySlug,
   getCollectionFilters,
+  getCollectionFiltersFromSparify,
 } from "@/lib/all-collections-data";
+import ExpandableFilterList from "@/components/expandable-filter-list";
 
 type CollectionDetailsPageProps = {
   params: Promise<{ slug: string }>;
@@ -24,13 +26,11 @@ export default async function CollectionDetailsPage({ params }: CollectionDetail
   }
 
   const products = getCategoryProducts(item);
-  const filters = getCollectionFilters(item.slug);
+  const filters =
+    (await getCollectionFiltersFromSparify(item.slug)) ?? getCollectionFilters(item.slug);
   const inStockCount = filters.availability.inStock;
   const outOfStockCount = filters.availability.outOfStock;
   const highestPrice = filters.highestPrice ?? Math.max(...products.map((product) => product.price));
-  const visibleCategoryFilters = filters.categories.slice(0, 8);
-  const visibleVehicleFilters = filters.vehicleConfigs.slice(0, 8);
-
   return (
     <section className="bg-zinc-200 py-8">
       <div className="mx-auto grid max-w-7xl gap-5 px-4 sm:px-6 lg:grid-cols-[260px_1fr] lg:px-8">
@@ -86,19 +86,7 @@ export default async function CollectionDetailsPage({ params }: CollectionDetail
               <summary className="cursor-pointer list-none text-sm font-medium text-zinc-800">
                 Category
               </summary>
-              <div className="mt-3 space-y-2 text-sm text-zinc-700">
-                {visibleCategoryFilters.map((filter) => (
-                  <label key={filter.label} className="flex items-center gap-2">
-                    <input type="checkbox" />
-                    {filter.label} ({filter.count})
-                  </label>
-                ))}
-                {filters.categories.length > visibleCategoryFilters.length ? (
-                  <button type="button" className="pt-1 text-xs font-medium text-zinc-900 hover:underline">
-                    + Show more
-                  </button>
-                ) : null}
-              </div>
+              <ExpandableFilterList items={filters.categories} initialVisibleCount={8} />
             </details>
           </div>
 
@@ -108,19 +96,7 @@ export default async function CollectionDetailsPage({ params }: CollectionDetail
                 <summary className="cursor-pointer list-none text-sm font-medium text-zinc-800">
                   Vehicle Config
                 </summary>
-                <div className="mt-3 space-y-2 text-sm text-zinc-700">
-                  {visibleVehicleFilters.map((filter) => (
-                    <label key={filter.label} className="flex items-center gap-2">
-                      <input type="checkbox" />
-                      {filter.label} ({filter.count})
-                    </label>
-                  ))}
-                  {filters.vehicleConfigs.length > visibleVehicleFilters.length ? (
-                    <button type="button" className="pt-1 text-xs font-medium text-zinc-900 hover:underline">
-                      + Show more
-                    </button>
-                  ) : null}
-                </div>
+                <ExpandableFilterList items={filters.vehicleConfigs} initialVisibleCount={8} />
               </details>
             </div>
           ) : null}

@@ -625,3 +625,88 @@ export function getCollectionFilters(slug: string): CollectionFilters {
     vehicleConfigs: defaultVehicleConfigs,
   };
 }
+
+const sparifyCollectionSlugAlias: Record<string, string> = {
+  "fog-lamps": "fogg-lamps",
+  "brake-system": "brake-and-clutch-system",
+  "clutch-parts": "clutch-system",
+};
+
+function parseFacetSection(html: string, label: "Availability" | "Category" | "Vehicle Config") {
+  const sectionMatch = html.match(
+    new RegExp(
+      `aria-label=\\\"${label}[^\\\"]*\\\"[\\s\\S]*?<\\/summary>([\\s\\S]*?)<\\/details>`,
+      "i"
+    )
+  );
+
+  if (!sectionMatch) {
+    return [];
+  }
+
+  const section = sectionMatch[1];
+  const values = [...section.matchAll(/facet-checkbox__text-label\">(.*?)<\/span>\s*\((\d+)\)/gi)];
+  const output: FilterOption[] = [];
+
+  for (const match of values) {
+    const rawLabel = match[1];
+    const count = Number(match[2]);
+    const labelText = rawLabel.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").trim();
+
+    if (!labelText || Number.isNaN(count)) {
+      continue;
+    }
+
+    if (!output.some((item) => item.label === labelText && item.count === count)) {
+      output.push({ label: labelText, count });
+    }
+  }
+
+  return output;
+}
+
+export async function getCollectionFiltersFromSparify(slug: string): Promise<CollectionFilters | null> {
+  const remoteSlug = sparifyCollectionSlugAlias[slug] ?? slug;
+  const url = `https://www.sparify.co/collections/${remoteSlug}`;
+
+  try {
+    const response = await fetch(url, {
+      next: { revalidate: 3600 },
+      headers: {
+        "user-agent": "Mozilla/5.0 (compatible; BikeAccessoriesBot/1.0)",
+      },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const html = await response.text();
+
+    const productCountMatch = html.match(/ProductCountDesktop\">\s*(\d+)\s*products/i);
+    const highestPriceMatch = html.match(/The highest price is\s*INR\.\s*([\d,]+)/i);
+    const availability = parseFacetSection(html, "Availability");
+    const categories = parseFacetSection(html, "Category");
+    const vehicleConfigs = parseFacetSection(html, "Vehicle Config");
+
+    const inStock = availability.find((item) => item.label.toLowerCase() === "in stock")?.count;
+    const outOfStock = availability.find((item) => item.label.toLowerCase() === "out of stock")?.count;
+
+    if (!categories.length && !vehicleConfigs.length && typeof inStock !== "number") {
+      return null;
+    }
+
+    return {
+      productCount: productCountMatch ? Number(productCountMatch[1]) : undefined,
+      highestPrice: highestPriceMatch ? Number(highestPriceMatch[1].replaceAll(",", "")) : undefined,
+      availability: {
+        inStock: typeof inStock === "number" ? inStock : 0,
+        outOfStock: typeof outOfStock === "number" ? outOfStock : 0,
+      },
+      categories,
+      vehicleConfigs,
+    };
+  } catch {
+    return null;
+  }
+}

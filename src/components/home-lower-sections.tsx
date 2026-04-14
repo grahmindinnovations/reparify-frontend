@@ -20,10 +20,10 @@ const trustPoints = [
 ];
 
 const faqItems = [
-  "Sparify - Enhancing Your Motorcycle Lifestyle",
-  "How's Sparify is different?",
-  "What Can You Find on Sparify?",
-  "The Sparify Assurance",
+  "Reparify - Enhancing Your Motorcycle Lifestyle",
+  "How's Reparify is different?",
+  "What Can You Find on Reparify?",
+  "The Reparify Assurance",
 ];
 
 const popularSearches = [
@@ -105,10 +105,10 @@ export default function HomeLowerSections() {
         </section>
 
         <section>
-          <h3 className="text-4xl font-semibold tracking-tight text-zinc-900">The Sparify Story</h3>
+          <h3 className="text-4xl font-semibold tracking-tight text-zinc-900">The Reparify Story</h3>
           <div className="mt-4 overflow-hidden bg-black ring-1 ring-black/10">
             <iframe
-              title="The Sparify Story"
+              title="The Reparify Story"
               src="https://www.youtube.com/embed/aqz-KE-bpKQ"
               className="aspect-video w-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -119,7 +119,7 @@ export default function HomeLowerSections() {
 
         <section className="bg-white p-4">
           <h4 className="text-center text-sm font-semibold text-zinc-700">
-            Customers can&apos;t stop raving about their &quot;Sparify&quot; experience
+            Customers can&apos;t stop raving about their &quot;Reparify&quot; experience
           </h4>
           <div className="mt-4 grid gap-4 lg:grid-cols-[1.1fr_1fr]">
             <div className="grid grid-cols-2 gap-2">

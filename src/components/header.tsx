@@ -30,7 +30,7 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b border-zinc-200 bg-zinc-300/90 backdrop-blur">
       <div className="mx-auto flex h-20 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
         <Link href="/" className="shrink-0 text-3xl font-black tracking-tight text-orange-500">
-          sparify
+          reparify
         </Link>
 
         <div className="relative flex-1">

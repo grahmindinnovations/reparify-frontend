@@ -11,7 +11,7 @@ export function Footer() {
           <div>
             <h4 className="text-2xl font-semibold">Reg office adress :</h4>
             <p className="mt-4 text-base text-zinc-300">171 H siddaiah road , Bangalore - 560002</p>
-            <p className="mt-4 text-base text-zinc-300">Email id- support@sparify.co</p>
+            <p className="mt-4 text-base text-zinc-300">Email id- support@reparify.co</p>
           </div>
 
           <div>

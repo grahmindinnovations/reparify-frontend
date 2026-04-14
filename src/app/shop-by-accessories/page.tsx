@@ -7,7 +7,7 @@ export default function ShopByAccessoriesPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-semibold tracking-tight text-zinc-900">Shop By Accessories</h1>
         <p className="mt-2 text-sm text-zinc-600">
-          Choose an accessory type to view products and filters fetched from Sparify.
+          Choose an accessory type to view products and filters fetched from Reparify.
         </p>
 
         <div className="mt-6 grid gap-x-10 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
